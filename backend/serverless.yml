@@ -1,0 +1,53 @@
+org: school2024
+service: backend
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: eu-north-1
+  stage: quizmaker
+  role: arn:aws:iam::774322383152:role/QuizMakerRole
+
+  # CORS för din dev-origin
+  httpApi:
+    cors:
+      allowedOrigins:
+        - http://localhost:5174
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+      allowedMethods:
+        - OPTIONS
+        - GET
+        - POST
+        - PUT
+        - DELETE
+      allowCredentials: false
+
+  # Peka på din befintliga bucket via env
+  environment:
+    QUIZ_BUCKET: quiz-maker-bucket
+
+functions:
+  postQuiz:
+    handler: functions/postQuiz/postQuiz.handler
+    events:
+      - httpApi:
+          path: /questions
+          method: POST
+
+  putQuiz:
+    handler: functions/putQuiz/putQuiz.handler
+    events:
+      - httpApi:
+          path: /questions/{id}
+          method: PUT
+
+  deleteQuiz:
+    handler: functions/deleteQuiz/deleteQuiz.handler
+    events:
+      - httpApi:
+          path: /questions/{id}
+          method: DELETE
+
+  

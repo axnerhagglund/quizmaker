@@ -1,9 +1,15 @@
 import React from 'react'
 import QuizQuestion, { type QuizItem } from '../../components/QuizQuestion/QuizQuestion'
+import { createQuestion } from '../../service/fetchQuestions.ts';
 
 function MakeQuizPage() {
-    function handleSubmit(item: QuizItem){
-        console.log("saved:", item);
+    async function  handleSubmit(item: QuizItem): Promise<void>{
+        try{
+            const { id } = await createQuestion(item)
+            console.log("saved id" ,id)
+        } catch(err){
+            console.error(err)
+        }
     }
   return (
     <>
